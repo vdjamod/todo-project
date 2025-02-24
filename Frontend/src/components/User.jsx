@@ -9,14 +9,19 @@ function User() {
   const [task, setTask] = useState("");
   const [level, setLevel] = useState(1); // 1 = Easy, 2 = Medium, 3 = Hard
   const [selectedOption, setSelectedOption] = useState("");
+  const [date, setDate] = useState("");
 
   const navigate = useNavigate();
 
   useEffect(() => {
     async function getData() {
-      const token = localStorage.getItem("token");
-      const res = await axios.get("/API/todo/all", { headers: { token } });
-      setTasks(res.data);
+      try {
+        const token = localStorage.getItem("token");
+        const res = await axios.get("/API/todo/all", { headers: { token } });
+        setTasks(res.data);
+      } catch (error) {
+        console.log("All Todo Error: " + error);
+      }
     }
     getData();
   }, [flag]);
@@ -35,10 +40,14 @@ function User() {
 
     // console.log(selectedOption);
     if (selectedOption) {
-      const res = await axios.get(`/API/user/todo/sort/${selectedOption}`, {
-        headers: { token },
-      });
-      setTasks(res.data);
+      try {
+        const res = await axios.get(`/API/user/todo/sort/${selectedOption}`, {
+          headers: { token },
+        });
+        setTasks(res.data);
+      } catch (error) {
+        console.log("Sort Todo Error: " + error);
+      }
     } else {
       setFlag((prev) => !prev);
     }
@@ -75,6 +84,21 @@ function User() {
       setTasks(res.data);
       setSelectedOption(option);
     }
+  };
+
+  const handleDateChange = async (e) => {
+    const date = e.target.value;
+    setDate(date);
+
+    const token = localStorage.getItem("token");
+
+    const res = await axios.get(`/API/user/todo/filter/${date}`, {
+      headers: {
+        token,
+      },
+    });
+
+    setTasks(res.data);
   };
 
   const getLevelColor = (level) => {
@@ -125,6 +149,21 @@ function User() {
               onChange={(e) => setLevel(Number(e.target.value))}
               className="w-full cursor-pointer"
             />
+          </div>
+
+          <div className="p-4">
+            <label className="block text-lg font-medium mb-2">
+              Select a Date:
+            </label>
+            <input
+              type="date"
+              value={date}
+              onChange={handleDateChange}
+              className="border rounded-lg p-2 w-full"
+            />
+            {date && (
+              <p className="mt-2 text-gray-700">Selected Date: {date}</p>
+            )}
           </div>
 
           <ul className="space-y-3">
