@@ -184,7 +184,7 @@ app.post("/API/todo", verifyToken, async (req, res) => {
 });
 
 //                                      ************ Filter ****************
-app.get("/API/user/todo/filter/:date", async (req, res) => {
+app.get("/API/user/todo/filter/:date", verifyToken, async (req, res) => {
   try {
     const selectedDate = req.params.date; // User-selected date
 
@@ -194,6 +194,7 @@ app.get("/API/user/todo/filter/:date", async (req, res) => {
 
     // Mongoose query
     const results = await Todo.find({
+      user: req.id,
       createdAt: {
         $gte: startOfDay, // Start of the selected date
         $lt: endOfDay, // End of the selected date

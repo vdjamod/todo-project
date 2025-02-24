@@ -10,44 +10,50 @@ function CompletedTodo() {
   useEffect(() => {
     async function getData() {
       const token = localStorage.getItem("token");
-      const res = await axios.get("/API/user/todo/complete", {
-        headers: {
-          token: token,
-        },
-      });
+      try {
+        const res = await axios.get("/API/user/todo/complete", {
+          headers: {
+            token: token,
+          },
+        });
 
-      console.log(res.data);
-      setTodos(res.data);
+        setTodos(res.data);
+      } catch (error) {
+        console.log("Get Completed Todo Error: " + error);
+      }
     }
 
     getData();
   }, []);
 
   const handleBack = () => {
-    navigate('/user')
-  }
+    navigate("/user");
+  };
 
   return (
     <>
-    <Header />
-    <div className="max-w-lg mx-auto bg-white shadow-lg rounded-lg p-4">
-      <h2 className="text-xl font-semibold text-gray-800 mb-4">
-        Completed Todos
-      </h2>
-      <ul className="space-y-3">
-        {todos.map((todo) => (
-          <li
-            key={todo._id}
-            className="flex items-center justify-between bg-green-100 border border-green-300 p-3 rounded-md shadow-sm"
-          >
-            <span className="text-green-800 font-medium">{todo.name}</span>
-          </li>
-        ))}
-      </ul>
-      <button onClick={handleBack} className="mt-2 bg-gray-500 text-white px-2 py-1 rounded-md hover:bg-gray-600 transition">
-        Back
-      </button>
-    </div>
+      <Header />
+      <div className="max-w-lg mx-auto bg-white shadow-lg rounded-lg p-4">
+        <h2 className="text-xl font-semibold text-gray-800 mb-4">
+          Completed Todos
+        </h2>
+        <ul className="space-y-3">
+          {todos.map((todo) => (
+            <li
+              key={todo._id}
+              className="flex items-center justify-between bg-green-100 border border-green-300 p-3 rounded-md shadow-sm"
+            >
+              <span className="text-green-800 font-medium">{todo.name}</span>
+            </li>
+          ))}
+        </ul>
+        <button
+          onClick={handleBack}
+          className="mt-2 bg-gray-500 text-white px-2 py-1 rounded-md hover:bg-gray-600 transition"
+        >
+          Back
+        </button>
+      </div>
     </>
   );
 }

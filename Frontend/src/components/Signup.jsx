@@ -10,16 +10,21 @@ export default function Singup() {
 
   const handleSignup = async () => {
     event.preventDefault();
-    const res = await axios.post("/API/user/signup", {
-      name,
-      email,
-      password,
-    });
+    try {
+      const res = await axios.post("/API/user/signup", {
+        name,
+        email,
+        password,
+      });
 
-    localStorage.setItem('token', res.data);
+      localStorage.setItem("token", res.data);
 
-    if (res.status === 201) {
-      navigate("/user", { replace: true });
+      if (res.status === 201) {
+        navigate("/user", { replace: true });
+      }
+    } catch (error) {
+      console.log("Signup Error: " + error);
+      alert("Signup Failed. Choose different email");
     }
   };
   return (

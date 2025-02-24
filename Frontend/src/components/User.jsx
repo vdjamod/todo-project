@@ -32,11 +32,15 @@ function User() {
       return;
     }
     const token = localStorage.getItem("token");
-    await axios.post(
-      "/API/todo",
-      { name: task, level },
-      { headers: { token } }
-    );
+    try {
+      await axios.post(
+        "/API/todo",
+        { name: task, level },
+        { headers: { token } }
+      );
+    } catch (error) {
+      console.log("ADD Todo Error: " + error);
+    }
 
     // console.log(selectedOption);
     if (selectedOption) {
@@ -56,18 +60,26 @@ function User() {
 
   const handleDelete = async (todoId) => {
     const token = localStorage.getItem("token");
-    await axios.put(
-      `/API/user/todo/delete/${todoId}`,
-      {},
-      { headers: { token } }
-    );
-    setFlag((prev) => !prev);
+    try {
+      await axios.put(
+        `/API/user/todo/delete/${todoId}`,
+        {},
+        { headers: { token } }
+      );
+      setFlag((prev) => !prev);
+    } catch (error) {
+      console.log("Delete Todo Error: " + error);
+    }
   };
 
   const handleComplete = async (todoId) => {
     const token = localStorage.getItem("token");
-    await axios.put(`/API/user/todo/${todoId}`, {}, { headers: { token } });
-    setFlag((prev) => !prev);
+    try {
+      await axios.put(`/API/user/todo/${todoId}`, {}, { headers: { token } });
+      setFlag((prev) => !prev);
+    } catch (error) {
+      console.log("Complete Todo Error: " + error);
+    }
   };
 
   const handleCompletedTodo = () => navigate("/user/todo/complete");
@@ -78,11 +90,16 @@ function User() {
       setFlag((prev) => !prev); // Trigger useEffect to fetch default data
     } else {
       const token = localStorage.getItem("token");
-      const res = await axios.get(`/API/user/todo/sort/${option}`, {
-        headers: { token },
-      });
-      setTasks(res.data);
-      setSelectedOption(option);
+
+      try {
+        const res = await axios.get(`/API/user/todo/sort/${option}`, {
+          headers: { token },
+        });
+        setTasks(res.data);
+        setSelectedOption(option);
+      } catch (error) {
+        console.log("Sort Todo Error: " + error);
+      }
     }
   };
 
@@ -92,13 +109,17 @@ function User() {
 
     const token = localStorage.getItem("token");
 
-    const res = await axios.get(`/API/user/todo/filter/${date}`, {
-      headers: {
-        token,
-      },
-    });
+    try {
+      const res = await axios.get(`/API/user/todo/filter/${date}`, {
+        headers: {
+          token,
+        },
+      });
 
-    setTasks(res.data);
+      setTasks(res.data);
+    } catch (error) {
+      console.log("Date Change Error: " + error);
+    }
   };
 
   const getLevelColor = (level) => {
