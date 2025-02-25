@@ -5,6 +5,7 @@ import User from "./Models/user.js";
 import bodyParser from "body-parser";
 import {
   comparePassword,
+  decryptPassword,
   encryptPassword,
   sendToken,
   verifyToken,
@@ -19,6 +20,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 import mongoose from "mongoose";
+import sendMail from "./helper/sendMail.js";
 
 // connecting to mongoose server
 main()
@@ -28,6 +30,29 @@ main()
 async function main() {
   await mongoose.connect(process.env.DB_URL);
 }
+
+//                                      ************ Send mail ****************
+app.post("/API/sendmail", async (req, res) => {
+  const email = req.body.email;
+
+  try {
+    const user = await User.findOne({ email });
+
+    if (user) {
+      const result = await sendMail(
+        email,
+        "Forget Password",
+        `Hi ${user.name}. Your password is: ` + decryptPassword(user.password)
+      );
+
+      return res.status(200).send('Mail sent successfully');
+    } else {
+      return res.status(404).send('User Not Registered');
+    }
+  } catch (error) {
+    return res.status(500).send("Server Error");
+  }
+});
 
 //                                      ************ signup ****************
 app.post("/API/user/signup", async (req, res) => {
@@ -44,11 +69,12 @@ app.post("/API/user/signup", async (req, res) => {
     }
 
     // Create and save the new user
-    const newPass = await encryptPassword(password);
+    console.log(password);
+    const newPass = encryptPassword(password);
+    console.log(newPass);
     let newUser = new User({ name, email, password: newPass });
     const result = await newUser.save();
 
-    // const token = sendToken(existingUser._id, email);
     const dbUser = await User.findOne({ email });
     const token = sendToken(dbUser._id, email);
 
@@ -92,29 +118,6 @@ app.get("/API/todo/all", verifyToken, async (req, res) => {
     res.send(result);
   } catch (error) {
     console.error("All Todo error:", error);
-    res.status(500).json({ message: "Internal server error" });
-  }
-});
-
-//                                      ************ Sort Todo ****************
-app.get("/API/user/todo/sort/:option", verifyToken, async (req, res) => {
-  try {
-    let sortOrder = req.params.option;
-    let sortOption = { level: 1, createdAt: -1 };
-
-    if (sortOrder === "desc") {
-      sortOption = { level: -1, createdAt: -1 };
-    }
-
-    const result = await Todo.find({
-      user: req.id,
-      isComplete: false,
-      isDelete: false,
-    }).sort(sortOption);
-
-    res.send(result);
-  } catch (error) {
-    console.error("Sort Todo error:", error);
     res.status(500).json({ message: "Internal server error" });
   }
 });
@@ -171,7 +174,6 @@ app.post("/API/todo", verifyToken, async (req, res) => {
     const response = await newTodo.save();
 
     const findedUser = await User.findById(req.id);
-    // console.log(findedUser);
     findedUser.todos.push(response._id);
     await findedUser.save();
 
@@ -186,20 +188,19 @@ app.post("/API/todo", verifyToken, async (req, res) => {
 //                                      ************ Filter ****************
 app.get("/API/user/todo/filter/:date", verifyToken, async (req, res) => {
   try {
-    const selectedDate = req.params.date; // User-selected date
+    const selectedDate = req.params.date;
 
     const startOfDay = new Date(selectedDate);
     const endOfDay = new Date(selectedDate);
-    endOfDay.setHours(23, 59, 59, 999); // Set to the end of the day
+    endOfDay.setHours(23, 59, 59, 999);
 
-    // Mongoose query
     const results = await Todo.find({
       user: req.id,
       isComplete: false,
       isDelete: false,
       createdAt: {
-        $gte: startOfDay, // Start of the selected date
-        $lt: endOfDay, // End of the selected date
+        $gte: startOfDay,
+        $lt: endOfDay,
       },
     }).sort({ createdAt: -1 });
 
@@ -210,16 +211,39 @@ app.get("/API/user/todo/filter/:date", verifyToken, async (req, res) => {
   }
 });
 
+//                                      ************ Sort Todo ****************
+app.get("/API/user/todo/sort/:option", verifyToken, async (req, res) => {
+  try {
+    let sortOrder = req.params.option;
+    let sortOption = { level: 1, createdAt: -1 };
+
+    if (sortOrder === "desc") {
+      sortOption = { level: -1, createdAt: -1 };
+    }
+
+    const result = await Todo.find({
+      user: req.id,
+      isComplete: false,
+      isDelete: false,
+    }).sort(sortOption);
+
+    res.send(result);
+  } catch (error) {
+    console.error("Sort Todo error:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
+
 //                                      ************ Filter - Sort ****************
 app.get(
   "/API/user/todo/filter/:date/sort/:option",
   verifyToken,
   async (req, res) => {
-    const selectedDate = req.params.date; // User-selected date
+    const selectedDate = req.params.date;
 
     const startOfDay = new Date(selectedDate);
     const endOfDay = new Date(selectedDate);
-    endOfDay.setHours(23, 59, 59, 999); // Set to the end of the day
+    endOfDay.setHours(23, 59, 59, 999);
 
     let sortOrder = req.params.option;
     let sortOption = { level: 1, createdAt: -1 };
@@ -229,14 +253,13 @@ app.get(
     }
 
     try {
-      // Mongoose query
       const results = await Todo.find({
         user: req.id,
         isComplete: false,
         isDelete: false,
         createdAt: {
-          $gte: startOfDay, // Start of the selected date
-          $lt: endOfDay, // End of the selected date
+          $gte: startOfDay,
+          $lt: endOfDay,
         },
       }).sort(sortOption);
 

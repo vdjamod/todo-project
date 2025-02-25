@@ -27,13 +27,13 @@ function Home() {
 
         <div className="flex gap-4">
           <button
-            onClick={() => navigate("/user/signup")}
+            onClick={() => navigate("/signup")}
             className="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-700"
           >
             Signup
           </button>
           <button
-            onClick={() => navigate("/user/signin")}
+            onClick={() => navigate("/signin")}
             className="px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-green-700"
           >
             Signin

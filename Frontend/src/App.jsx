@@ -7,6 +7,7 @@ import Signin from "./components/Signin";
 import Home from "./components/Home";
 import CompletedTodo from "./components/CompletedTodo";
 import AuthLayout from "./components/AuthLayout";
+import ForgetPassword from "./components/ForgetPassword";
 
 function App() {
   return (
@@ -20,22 +21,9 @@ function App() {
             </AuthLayout>
           }
         />
-        <Route
-          path="/user/signup"
-          element={
-            <AuthLayout>
-              <Signup />
-            </AuthLayout>
-          }
-        />
-        <Route
-          path="/user/signin"
-          element={
-            <AuthLayout>
-              <Signin />
-            </AuthLayout>
-          }
-        />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/signin" element={<Signin />} />
+        <Route path="/forgetpassword" element={<ForgetPassword />} />
         <Route
           path="/user/todo/complete"
           element={
