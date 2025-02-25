@@ -1,14 +1,17 @@
 import axios from "axios";
 import { useState } from "react";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { signin } from "../../store/authSlice";
 
 export default function Singup() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-  const handleSignup = async () => {
+  const handleSignup = async (event) => {
     event.preventDefault();
     try {
       const res = await axios.post("/API/user/signup", {
@@ -20,6 +23,7 @@ export default function Singup() {
       localStorage.setItem("token", res.data);
 
       if (res.status === 201) {
+        dispatch(signin());
         navigate("/user", { replace: true });
       }
     } catch (error) {
@@ -27,6 +31,7 @@ export default function Singup() {
       alert("Signup Failed. Choose different email");
     }
   };
+
   return (
     <>
       <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">

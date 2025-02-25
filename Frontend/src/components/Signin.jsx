@@ -1,30 +1,34 @@
 import axios from "axios";
 import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { signin } from "../../store/authSlice";
 
 export default function Signin() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const navigate = useNavigate();
-  
+  const dispatch = useDispatch();
+
   const handleSignin = async (e) => {
     e.preventDefault();
 
     try {
       const res = await axios.post(`/API/user/signin`, {
         email,
-        password
+        password,
       });
 
       // console.log(res);
-      localStorage.setItem('token', res.data);
+      localStorage.setItem("token", res.data);
 
       if (res.status === 201) {
+        dispatch(signin());
         navigate("/user");
       }
     } catch (error) {
       if (error.response && error.response.status === 404) {
-        alert('Invalid email or password');
+        alert("Invalid email or password");
       } else {
         console.log(error);
       }

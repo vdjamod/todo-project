@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import Header from "./Header";
 
 function User() {
@@ -10,8 +11,9 @@ function User() {
   const [level, setLevel] = useState(1); // 1 = Easy, 2 = Medium, 3 = Hard
   const [selectedOption, setSelectedOption] = useState("");
   const [date, setDate] = useState("");
-
   const navigate = useNavigate();
+  const authStatus = useSelector((state) => state.auth.status);
+
 
   useEffect(() => {
     async function getData() {
@@ -24,6 +26,7 @@ function User() {
       }
     }
     getData();
+    console.log(authStatus);
   }, [flag]);
 
   const addTask = async () => {
