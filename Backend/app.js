@@ -195,11 +195,13 @@ app.get("/API/user/todo/filter/:date", verifyToken, async (req, res) => {
     // Mongoose query
     const results = await Todo.find({
       user: req.id,
+      isComplete: false,
+      isDelete: false,
       createdAt: {
         $gte: startOfDay, // Start of the selected date
         $lt: endOfDay, // End of the selected date
       },
-    });
+    }).sort({ createdAt: -1 });
 
     res.send(results);
   } catch (error) {
@@ -208,6 +210,41 @@ app.get("/API/user/todo/filter/:date", verifyToken, async (req, res) => {
   }
 });
 
+//                                      ************ Filter - Sort ****************
+app.get(
+  "/API/user/todo/filter/:date/sort/:option",
+  verifyToken,
+  async (req, res) => {
+    const selectedDate = req.params.date; // User-selected date
+
+    const startOfDay = new Date(selectedDate);
+    const endOfDay = new Date(selectedDate);
+    endOfDay.setHours(23, 59, 59, 999); // Set to the end of the day
+
+    let sortOrder = req.params.option;
+    let sortOption = { level: 1, createdAt: -1 };
+
+    if (sortOrder === "desc") {
+      sortOption = { level: -1, createdAt: -1 };
+    }
+
+    try {
+      // Mongoose query
+      const results = await Todo.find({
+        user: req.id,
+        createdAt: {
+          $gte: startOfDay, // Start of the selected date
+          $lt: endOfDay, // End of the selected date
+        },
+      }).sort(sortOption);
+
+      res.send(results);
+    } catch (error) {
+      console.error("Filter error:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  }
+);
 
 app.get("/", (req, res) => {
   res.send(`app working correctly`);

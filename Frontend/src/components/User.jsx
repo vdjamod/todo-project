@@ -85,20 +85,39 @@ function User() {
   const handleCompletedTodo = () => navigate("/user/todo/complete");
 
   const handleSelect = async (option) => {
+    const token = localStorage.getItem("token");
     if (selectedOption === option) {
       setSelectedOption(""); // Reset selection
-      setFlag((prev) => !prev); // Trigger useEffect to fetch default data
-    } else {
-      const token = localStorage.getItem("token");
 
-      try {
-        const res = await axios.get(`/API/user/todo/sort/${option}`, {
+      if (!date) {
+        setFlag((prev) => !prev); // Trigger useEffect to fetch default data
+      } else {
+        const res = await axios.get(`/API/user/todo/filter/${date}`, {
           headers: { token },
         });
         setTasks(res.data);
+      }
+    } else {
+      if (date) {
+        const res = await axios.get(
+          `/API/user/todo/filter/${date}/sort/${option}`,
+          {
+            headers: { token },
+          }
+        );
+
+        setTasks(res.data);
         setSelectedOption(option);
-      } catch (error) {
-        console.log("Sort Todo Error: " + error);
+      } else {
+        try {
+          const res = await axios.get(`/API/user/todo/sort/${option}`, {
+            headers: { token },
+          });
+          setTasks(res.data);
+          setSelectedOption(option);
+        } catch (error) {
+          console.log("Sort Todo Error: " + error);
+        }
       }
     }
   };
