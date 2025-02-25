@@ -213,6 +213,7 @@ app.get("/API/user/todo/filter/:date", verifyToken, async (req, res) => {
 
 //                                      ************ Sort Todo ****************
 app.get("/API/user/todo/sort/:option", verifyToken, async (req, res) => {
+  console.log(req.params.option);
   try {
     let sortOrder = req.params.option;
     let sortOption = { level: 1, createdAt: -1 };

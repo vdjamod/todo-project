@@ -62,23 +62,73 @@ function User() {
 
   const handleDelete = async (todoId) => {
     const token = localStorage.getItem("token");
+
     try {
       await axios.put(
         `/API/user/todo/delete/${todoId}`,
         {},
         { headers: { token } }
       );
-      setFlag((prev) => !prev);
+      // setFlag((prev) => !prev);
     } catch (error) {
       console.log("Delete Todo Error: " + error);
     }
+
+    let url = "";
+
+    if (selectedOption) {
+      url = date
+        ? `/API/user/todo/filter/${date}/sort/${selectedOption}`
+        : `/API/user/todo/sort/${selectedOption}`;
+    } else {
+      if (date) {
+        url = `/API/user/todo/filter/${date}`;
+      } else {
+        setFlag((prevFlag) => !prevFlag);
+        return;
+      }
+    }
+
+    const res = await axios.get(url, {
+      headers: {
+        token,
+      },
+    });
+    // console.log(res.data);
+    setTasks(res.data);
   };
 
   const handleComplete = async (todoId) => {
     const token = localStorage.getItem("token");
     try {
       await axios.put(`/API/user/todo/${todoId}`, {}, { headers: { token } });
-      setFlag((prev) => !prev);
+    } catch (error) {
+      console.log("Complete Todo Error: " + error);
+    }
+
+    let url = "";
+
+    if (selectedOption) {
+      url = date
+        ? `/API/user/todo/filter/${date}/sort/${selectedOption}`
+        : `/API/user/todo/sort/${selectedOption}`;
+    } else {
+      if (date) {
+        url = `/API/user/todo/filter/${date}`;
+      } else {
+        setFlag((prevFlag) => !prevFlag);
+        return;
+      }
+    }
+
+    try {
+      const res = await axios.get(url, {
+        headers: {
+          token,
+        },
+      });
+
+      setTasks(res.data);
     } catch (error) {
       console.log("Complete Todo Error: " + error);
     }
