@@ -14,14 +14,8 @@ export default function Signup() {
   const handleSignup = async (event) => {
     event.preventDefault();
     try {
-      const res = await axios.post("/API/user/signup", {
-        name,
-        email,
-        password,
-      });
-
+      const res = await axios.post("/API/user/signup", { name, email, password });
       localStorage.setItem("token", res.data);
-
       if (res.status === 201) {
         dispatch(signin());
         navigate("/user", { replace: true });
@@ -33,38 +27,34 @@ export default function Signup() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
-      <div className="max-w-md w-full bg-white shadow-lg rounded-lg p-6">
-        <h2 className="text-2xl font-bold text-center text-gray-900">Sign Up</h2>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-100 to-purple-200 px-4">
+      <div className="max-w-md w-full bg-white bg-opacity-80 shadow-2xl rounded-2xl p-8 backdrop-blur-md">
+        <h2 className="text-3xl font-bold text-center text-gray-900 mb-6">Create an Account</h2>
 
-        <form onSubmit={handleSignup} className="mt-6 space-y-4">
+        <form onSubmit={handleSignup} className="space-y-5">
           <div>
             <label htmlFor="name" className="block text-sm font-medium text-gray-700">
               Name
             </label>
             <input
               id="name"
-              name="name"
               type="text"
-              autoComplete="name"
               onChange={(e) => setName(e.target.value)}
               required
-              className="mt-1 w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 px-3 py-2"
+              className="mt-2 w-full rounded-md border border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 px-3 py-2 transition-all"
             />
           </div>
 
           <div>
             <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-              Email address
+              Email Address
             </label>
             <input
               id="email"
-              name="email"
               type="email"
-              autoComplete="email"
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="mt-1 w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 px-3 py-2"
+              className="mt-2 w-full rounded-md border border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 px-3 py-2 transition-all"
             />
           </div>
 
@@ -73,32 +63,30 @@ export default function Signup() {
               <label htmlFor="password" className="block text-sm font-medium text-gray-700">
                 Password
               </label>
-              <Link to="/forgot-password" className="text-sm text-indigo-600 hover:text-indigo-500">
+              <Link to="/forgetpassword" className="text-sm text-indigo-600 hover:text-indigo-500 transition">
                 Forgot password?
               </Link>
             </div>
             <input
               id="password"
-              name="password"
               type="password"
-              autoComplete="current-password"
               onChange={(e) => setPassword(e.target.value)}
               required
-              className="mt-1 w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 px-3 py-2"
+              className="mt-2 w-full rounded-md border border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 px-3 py-2 transition-all"
             />
           </div>
 
           <button
             type="submit"
-            className="w-full bg-indigo-600 text-white py-2 rounded-md font-semibold hover:bg-indigo-500 transition"
+            className="w-full bg-indigo-600 text-white py-3 rounded-lg font-semibold shadow-md hover:bg-indigo-500 hover:scale-[1.02] transition-all duration-300"
           >
-            Sign up
+            Sign Up
           </button>
         </form>
 
-        <p className="mt-4 text-center text-sm text-gray-600">
+        <p className="mt-6 text-center text-sm text-gray-600">
           Already have an account?{" "}
-          <Link to="/signin" className="font-semibold text-indigo-600 hover:text-indigo-500">
+          <Link to="/signin" className="font-semibold text-indigo-600 hover:text-indigo-500 transition">
             Sign in
           </Link>
         </p>
