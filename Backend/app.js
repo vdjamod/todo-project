@@ -232,6 +232,8 @@ app.get(
       // Mongoose query
       const results = await Todo.find({
         user: req.id,
+        isComplete: false,
+        isDelete: false,
         createdAt: {
           $gte: startOfDay, // Start of the selected date
           $lt: endOfDay, // End of the selected date

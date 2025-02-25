@@ -7,10 +7,12 @@ export default function AuthLayout({children}) {
   const authStatus = useSelector((state) => state.auth.status);
 
   useEffect(() => {
-    if (!authStatus) {
+    const token = localStorage.getItem('token');
+
+    if(!token && !authStatus) {
       navigate("/user/signin");
     }
-  }, [authStatus]);
+  }, []);
 
   return (
     <>

@@ -14,7 +14,6 @@ function User() {
   const navigate = useNavigate();
   const authStatus = useSelector((state) => state.auth.status);
 
-
   useEffect(() => {
     async function getData() {
       try {
@@ -89,39 +88,31 @@ function User() {
 
   const handleSelect = async (option) => {
     const token = localStorage.getItem("token");
-    if (selectedOption === option) {
-      setSelectedOption(""); // Reset selection
+    if (!token) {
+      console.error("User token not found.");
+      return;
+    }
 
-      if (!date) {
-        setFlag((prev) => !prev); // Trigger useEffect to fetch default data
+    try {
+      let url = "";
+      if (selectedOption === option) {
+        setSelectedOption(""); // Reset selection
+        url = date ? `/API/user/todo/filter/${date}` : null;
       } else {
-        const res = await axios.get(`/API/user/todo/filter/${date}`, {
-          headers: { token },
-        });
-        setTasks(res.data);
-      }
-    } else {
-      if (date) {
-        const res = await axios.get(
-          `/API/user/todo/filter/${date}/sort/${option}`,
-          {
-            headers: { token },
-          }
-        );
-
-        setTasks(res.data);
+        url = date
+          ? `/API/user/todo/filter/${date}/sort/${option}`
+          : `/API/user/todo/sort/${option}`;
         setSelectedOption(option);
-      } else {
-        try {
-          const res = await axios.get(`/API/user/todo/sort/${option}`, {
-            headers: { token },
-          });
-          setTasks(res.data);
-          setSelectedOption(option);
-        } catch (error) {
-          console.log("Sort Todo Error: " + error);
-        }
       }
+
+      if (url) {
+        const res = await axios.get(url, { headers: { token } });
+        setTasks(res.data);
+      } else {
+        setFlag((prev) => !prev); // Trigger useEffect for default data
+      }
+    } catch (error) {
+      console.error("Sort Todo Error:", error);
     }
   };
 
@@ -129,10 +120,14 @@ function User() {
     const date = e.target.value;
     setDate(date);
 
+    let url = selectedOption
+      ? `/API/user/todo/filter/${date}/sort/${selectedOption}`
+      : `/API/user/todo/filter/${date}`;
+
     const token = localStorage.getItem("token");
 
     try {
-      const res = await axios.get(`/API/user/todo/filter/${date}`, {
+      const res = await axios.get(url, {
         headers: {
           token,
         },
