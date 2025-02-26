@@ -30,6 +30,14 @@ function CompletedTodo() {
     navigate("/user");
   };
 
+  const getLevelColor = (level) => {
+    return level === 1
+      ? "text-green-500"
+      : level === 2
+      ? "text-orange-400"
+      : "text-red-500";
+  };
+
   return (
     <>
       <Header />
@@ -43,7 +51,9 @@ function CompletedTodo() {
               key={todo._id}
               className="flex items-center justify-between bg-green-100 border border-green-300 p-3 rounded-md shadow-sm"
             >
-              <span className="text-green-800 font-medium">{todo.name}</span>
+              <span className={`font-medium ${getLevelColor(todo.level)}`}>
+                {todo.name}
+              </span>
             </li>
           ))}
         </ul>

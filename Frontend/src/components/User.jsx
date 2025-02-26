@@ -170,6 +170,11 @@ function User() {
     const date = e.target.value;
     setDate(date);
 
+    if (!date) {
+      setFlag((prevFlag) => !prevFlag);
+      return;
+    }
+
     let url = selectedOption
       ? `/API/user/todo/filter/${date}/sort/${selectedOption}`
       : `/API/user/todo/filter/${date}`;
@@ -189,6 +194,13 @@ function User() {
     }
   };
 
+  const handleKeyDown = (event) => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      addTask();
+    }
+  };
+
   const getLevelColor = (level) => {
     return level === 1
       ? "text-green-500"
@@ -200,32 +212,35 @@ function User() {
   return (
     <>
       <Header />
-      <div className="min-h-screen flex items-center justify-center bg-gray-100 p-6">
-        <div className="bg-white p-8 rounded-2xl shadow-lg w-full max-w-lg">
-          <h1 className="text-4xl font-semibold text-center mb-6 text-gray-800">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-100 to-gray-300 p-6">
+        <div className="bg-white p-8 rounded-3xl shadow-xl w-full max-w-lg">
+          <h1 className="text-4xl font-bold text-center mb-6 text-gray-900">
             Todo App
           </h1>
 
-          <div className="flex gap-3 mb-4">
+          {/* Task Input */}
+          <div className="flex gap-3 mb-6">
             <input
               type="text"
-              placeholder="Enter task"
+              placeholder="Enter task..."
               value={task}
               onChange={(e) => setTask(e.target.value)}
-              className="flex-1 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+              onKeyDown={handleKeyDown}
+              className="flex-1 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 transition"
             />
             <button
               onClick={addTask}
-              className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
+              className="bg-blue-600 text-white px-5 py-3 rounded-xl hover:bg-blue-700 transition font-medium"
             >
               Add
             </button>
           </div>
 
-          <div className="mb-4">
+          {/* Difficulty Level */}
+          <div className="mb-6">
             <label className="block text-gray-700 font-medium mb-2">
               Difficulty:{" "}
-              <span className={getLevelColor(level)}>
+              <span className={`font-semibold ${getLevelColor(level)}`}>
                 {level === 1 ? "Easy" : level === 2 ? "Medium" : "Hard"}
               </span>
             </label>
@@ -239,7 +254,8 @@ function User() {
             />
           </div>
 
-          <div className="p-4">
+          {/* Date Picker */}
+          <div className="mb-6">
             <label className="block text-lg font-medium mb-2">
               Select a Date:
             </label>
@@ -247,32 +263,37 @@ function User() {
               type="date"
               value={date}
               onChange={handleDateChange}
-              className="border rounded-lg p-2 w-full"
+              className="border rounded-lg p-3 w-full focus:ring-2 focus:ring-blue-500 transition"
             />
             {date && (
               <p className="mt-2 text-gray-700">Selected Date: {date}</p>
             )}
           </div>
 
-          <ul className="space-y-3">
+          {/* Task List */}
+          <ul className="space-y-4">
             {todos.map((todo, idx) => (
               <li
                 key={idx}
-                className="flex justify-between items-center p-4 rounded-lg bg-gray-100 shadow"
+                className="flex justify-between items-center p-2 rounded-xl bg-gray-200 shadow-md transition hover:bg-gray-300"
               >
-                <span className={`text-gray-800 ${getLevelColor(todo.level)}`}>
+                <span
+                  className={`font-medium text-gray-800 ${getLevelColor(
+                    todo.level
+                  )}`}
+                >
                   {todo.name}
                 </span>
                 <div className="flex gap-2">
                   <button
                     onClick={() => handleComplete(todo._id)}
-                    className="bg-green-600 text-white px-3 py-1 rounded-lg hover:bg-green-700 transition"
+                    className="bg-green-600 text-white px-3 py-2 rounded-lg hover:bg-green-700 transition font-medium"
                   >
                     Complete
                   </button>
                   <button
                     onClick={() => handleDelete(todo._id)}
-                    className="bg-red-600 text-white px-3 py-1 rounded-lg hover:bg-red-700 transition"
+                    className="bg-red-600 text-white px-3 py-2 rounded-lg hover:bg-red-700 transition font-medium"
                   >
                     Delete
                   </button>
@@ -281,8 +302,8 @@ function User() {
             ))}
           </ul>
 
-          {/* Checkbox */}
-          <div className="flex gap-4 mt-6">
+          {/* Sort Options */}
+          <div className="flex gap-6 mt-6">
             <label className="flex items-center gap-2 cursor-pointer">
               <input
                 type="checkbox"
@@ -292,7 +313,9 @@ function User() {
               />
               <span
                 className={
-                  selectedOption === "asc" ? "text-blue-600" : "text-gray-600"
+                  selectedOption === "asc"
+                    ? "text-blue-600 font-medium"
+                    : "text-gray-600"
                 }
               >
                 Sort Asc
@@ -308,7 +331,9 @@ function User() {
               />
               <span
                 className={
-                  selectedOption === "desc" ? "text-blue-600" : "text-gray-600"
+                  selectedOption === "desc"
+                    ? "text-blue-600 font-medium"
+                    : "text-gray-600"
                 }
               >
                 Sort Desc
@@ -316,10 +341,11 @@ function User() {
             </label>
           </div>
 
-          <div className="mt-4">
+          {/* Completed Tasks Button */}
+          <div className="mt-6">
             <button
               onClick={handleCompletedTodo}
-              className="w-full bg-gray-700 text-white px-4 py-2 rounded-lg hover:bg-gray-800 transition"
+              className="w-full bg-gray-700 text-white px-4 py-3 rounded-xl hover:bg-gray-800 transition font-medium"
             >
               Completed Todo
             </button>
