@@ -1,9 +1,8 @@
 import jwt from "jsonwebtoken";
-import bcrypt from "bcrypt";
 import CryptoJS from "crypto-js";
-const secretKey = process.env.SECRET
-  ? process.env.SECRET
-  : "b34f5d09e1a7c8f2296df15d2f9e1b3e56d4a8c29cf8235aa7b6e40a1f8b2c3d";
+import dotenv from "dotenv";
+dotenv.config();
+const secretKey = process.env.SECRET;
 
 export function encryptPassword(password) {
   console.log(secretKey);
