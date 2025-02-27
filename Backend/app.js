@@ -94,7 +94,7 @@ app.post("/API/user/login", async (req, res) => {
     const dbUser = await User.findOne({ email });
     const result = comparePassword(password, dbUser.password);
 
-    if (res) {
+    if (result) {
       const token = sendToken(dbUser._id, email);
       // console.log(token);
       res.status(201).send(token);

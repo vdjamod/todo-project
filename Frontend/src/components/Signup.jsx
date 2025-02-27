@@ -8,11 +8,37 @@ export default function Signup() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
+  const [passwordError, setPasswordError] = useState("");
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
+  const validatePassword = (password) => {
+    const minLength = /.{8,}/; // At least 8 characters
+    const specialChar = /[!@#$%^&*(),.?":{}|<>]/; // At least 1 special character
+    const upperCase = /[A-Z]/; // At least 1 uppercase letter
+    const lowerCase = /[a-z]/; // At least 1 lowercase letter
+    const digit = /\d/; // At least 1 number
+  
+    if (
+      !minLength.test(password) ||
+      !specialChar.test(password) ||
+      !upperCase.test(password) ||
+      !lowerCase.test(password) ||
+      !digit.test(password)
+    ) {
+      return "Password must be at least 8 characters long, include 1 special character, 1 uppercase letter, 1 lowercase letter, and 1 digit.";
+    }
+    return "";
+  };
+
   const handleSignup = async (event) => {
     event.preventDefault();
+    const errorMessage = validatePassword(password);
+    if (errorMessage) {
+      setPasswordError(errorMessage);
+      return;
+    }
+    setPasswordError("");
     try {
       const res = await axios.post("/API/user/signup", { name, email, password });
       localStorage.setItem("token", res.data);
@@ -74,6 +100,7 @@ export default function Signup() {
               required
               className="mt-2 w-full rounded-md border border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 px-3 py-2 transition-all"
             />
+            {passwordError && <p className="text-red-500 text-sm mt-1">{passwordError}</p>}
           </div>
 
           <button

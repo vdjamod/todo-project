@@ -10,7 +10,7 @@ export default function Login() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const handleSignin = async (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
     try {
       const res = await axios.post(`/API/user/login`, { email, password });
@@ -33,7 +33,7 @@ export default function Login() {
       <div className="max-w-md w-full bg-white bg-opacity-80 shadow-2xl rounded-2xl p-8 backdrop-blur-md">
         <h2 className="text-3xl font-bold text-center text-gray-900 mb-6">Welcome Back!</h2>
 
-        <form onSubmit={handleSignin} className="space-y-5">
+        <form onSubmit={handleLogin} className="space-y-5">
           <div>
             <label htmlFor="email" className="block text-sm font-medium text-gray-700">
               Email Address
