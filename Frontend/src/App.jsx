@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 // USER
 import User from "./components/User";
 import Signup from "./components/Signup";
-import Signin from "./components/Signin";
+import Login from "./components/Login";
 import Home from "./components/Home";
 import CompletedTodo from "./components/CompletedTodo";
 import AuthLayout from "./components/AuthLayout";
@@ -22,7 +22,7 @@ function App() {
           }
         />
         <Route path="/signup" element={<Signup />} />
-        <Route path="/signin" element={<Signin />} />
+        <Route path="/login" element={<Login />} />
         <Route path="/forgetpassword" element={<ForgetPassword />} />
         <Route
           path="/user/todo/complete"

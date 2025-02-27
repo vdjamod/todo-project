@@ -32,10 +32,10 @@ function Home() {
             Signup
           </button>
           <button
-            onClick={() => navigate("/signin")}
+            onClick={() => navigate("/login")}
             className="px-6 py-3 bg-green-600 text-white font-semibold rounded-lg transition-all duration-300 shadow-md hover:bg-green-700 hover:scale-105"
           >
-            Signin
+            Login
           </button>
         </div>
       </main>

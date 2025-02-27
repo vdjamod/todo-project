@@ -4,7 +4,7 @@ import { useDispatch } from "react-redux";
 import { useNavigate, Link } from "react-router-dom";
 import { signin } from "../../store/authSlice";
 
-export default function Signin() {
+export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
@@ -13,7 +13,7 @@ export default function Signin() {
   const handleSignin = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post(`/API/user/signin`, { email, password });
+      const res = await axios.post(`/API/user/login`, { email, password });
       localStorage.setItem("token", res.data);
       if (res.status === 201) {
         dispatch(signin());
@@ -69,7 +69,7 @@ export default function Signin() {
             type="submit"
             className="w-full bg-indigo-600 text-white py-3 rounded-lg font-semibold shadow-md hover:bg-indigo-500 hover:scale-[1.02] transition-all duration-300"
           >
-            Sign In
+            Login
           </button>
         </form>
 

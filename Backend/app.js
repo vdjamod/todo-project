@@ -45,9 +45,9 @@ app.post("/API/sendmail", async (req, res) => {
         `Hi ${user.name}. Your password is: ` + decryptPassword(user.password)
       );
 
-      return res.status(200).send('Mail sent successfully');
+      return res.status(200).send("Mail sent successfully");
     } else {
-      return res.status(404).send('User Not Registered');
+      return res.status(404).send("User Not Registered");
     }
   } catch (error) {
     return res.status(500).send("Server Error");
@@ -86,8 +86,8 @@ app.post("/API/user/signup", async (req, res) => {
   }
 });
 
-//                                      ************ Signin ****************
-app.post("/API/user/signin", async (req, res) => {
+//                                      ************ Login ****************
+app.post("/API/user/login", async (req, res) => {
   try {
     const { email, password } = req.body;
 
@@ -104,6 +104,17 @@ app.post("/API/user/signin", async (req, res) => {
   } catch (error) {
     console.error("Signin error:", error);
     res.status(500).json({ message: "Internal server error" });
+  }
+});
+
+app.delete("/API/delete", verifyToken, async (req, res) => {
+  try {
+    await Todo.deleteMany({ user: req.id });
+    await User.findByIdAndDelete(req.id);
+
+    res.send("User Delete Successfully");
+  } catch (error) {
+    console.log("DELETE ERROR" + error);
   }
 });
 

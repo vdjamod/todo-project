@@ -14,7 +14,7 @@ const EmailInput = () => {
 
       if (res.status === 200) {
         alert("Mail sent successfully!");
-        navigate('/signin');
+        navigate('/login');
       }
     } catch (error) {
       if (error.response) {
