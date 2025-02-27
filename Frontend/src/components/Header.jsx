@@ -18,6 +18,12 @@ function Header() {
       },
     });
 
+    console.log(res.status);
+
+    if(res.status === 200) {
+      localStorage.removeItem('token');
+    }
+
     navigate("/");
   };
 
