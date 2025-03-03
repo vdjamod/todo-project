@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 import GeneralModal from "./GeneralModal.jsx";
 
 function Header() {
-  console.log("Header component mounted"); // This should log when the page loads
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
 

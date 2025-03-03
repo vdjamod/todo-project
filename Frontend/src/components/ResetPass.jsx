@@ -5,6 +5,7 @@ import { useNavigate, useParams } from "react-router-dom";
 const ResetPass = () => {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [passwordError, setPasswordError] = useState("");
   const [error, setError] = useState("");
   let { id } = useParams();
   const navigate = useNavigate();
@@ -29,8 +30,33 @@ const ResetPass = () => {
     getData();
   }, []);
 
+  const validatePassword = (password) => {
+    const minLength = /.{8,}/; // At least 8 characters
+    const specialChar = /[!@#$%^&*(),.?":{}|<>]/; // At least 1 special character
+    const upperCase = /[A-Z]/; // At least 1 uppercase letter
+    const lowerCase = /[a-z]/; // At least 1 lowercase letter
+    const digit = /\d/; // At least 1 number
+
+    if (
+      !minLength.test(password) ||
+      !specialChar.test(password) ||
+      !upperCase.test(password) ||
+      !lowerCase.test(password) ||
+      !digit.test(password)
+    ) {
+      return "Password must be at least 8 characters long, include 1 special character, 1 uppercase letter, 1 lowercase letter, and 1 digit.";
+    }
+    return "";
+  };
+
   const handleReset = async (e) => {
-    e.preventDefault(); // Prevent form submission reload
+    e.preventDefault();
+    const errorMessage = validatePassword(newPassword);
+    if (errorMessage) {
+      setPasswordError(errorMessage);
+      return;
+    }
+    setPasswordError("");
 
     if (newPassword !== confirmPassword) {
       setError("Passwords do not match!");
@@ -66,6 +92,7 @@ const ResetPass = () => {
               onChange={(e) => setNewPassword(e.target.value)}
               required
             />
+            {passwordError && <p className="text-red-500 text-sm mt-1">{passwordError}</p>}
           </div>
           <div>
             <label className="block text-gray-700">Confirm Password</label>
