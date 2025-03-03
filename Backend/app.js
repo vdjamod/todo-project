@@ -31,28 +31,55 @@ async function main() {
   await mongoose.connect(process.env.DB_URL);
 }
 
+//                                      ************ Reset password ****************
+app.put("/API/reset-pass", async (req, res) => {
+  const { id, newPassword } = req.body;
+
+  const user = await User.findById(id);
+  user.password = encryptPassword(newPassword);
+  await user.save();
+  res.status(200).send("Password Updated Successfully");
+});
+
 //                                      ************ Send mail ****************
 app.post("/API/sendmail", async (req, res) => {
   const email = req.body.email;
+  const encryptEmail = encryptPassword(email);
+  const user = await User.findOne({ email });
 
-  try {
-    const user = await User.findOne({ email });
+  const id = user._id;
+  let url = `http://localhost:5173/reset-password/76b${id}76b`;
 
-    if (user) {
-      const result = await sendMail(
-        email,
-        "Forget Password",
-        `Hi ${user.name}. Your password is: ` + decryptPassword(user.password)
-      );
+  if (user) {
+    const result = await sendMail(
+      email,
+      "Forget Password",
+      `Hi ${user.name}. Your Reset Password link is: ${url}`
+    );
 
-      return res.status(200).send("Mail sent successfully");
-    } else {
-      return res.status(404).send("User Not Registered");
-    }
-  } catch (error) {
-    return res.status(500).send("Server Error");
+    return res.status(200).send("Mail sent successfully");
+  } else {
+    return res.status(404).send("User Not Registered");
   }
 });
+
+//                                      ************ Check User ****************
+app.post("/API/validate-user", async (req, res) => {
+  try {
+    const { id } = req.body;
+    console.log(id);
+
+    const user = await User.findById(id);
+    if (!user) {
+      return res.status(404).send("User not valid");
+    }
+
+    res.status(200).send("User Valid");
+  } catch (error) {
+    res.status(201).send("Error validating user");
+  }
+});
+
 
 //                                      ************ signup ****************
 app.post("/API/user/signup", async (req, res) => {

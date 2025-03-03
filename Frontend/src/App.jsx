@@ -8,6 +8,7 @@ import Home from "./components/Home";
 import CompletedTodo from "./components/CompletedTodo";
 import AuthLayout from "./components/AuthLayout";
 import ForgetPassword from "./components/ForgetPassword";
+import ResetPass from "./components/ResetPass";
 
 function App() {
   return (
@@ -32,6 +33,8 @@ function App() {
             </AuthLayout>
           }
         />
+
+        <Route path="/reset-password/:id" element={<ResetPass />} />
 
         <Route path="/" element={<Home />} />
       </Routes>
