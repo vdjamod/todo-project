@@ -29,9 +29,9 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-100 to-purple-200 px-4">
-      <div className="max-w-md w-full bg-white bg-opacity-80 shadow-2xl rounded-2xl p-8 backdrop-blur-md">
-        <h2 className="text-3xl font-bold text-center text-gray-900 mb-6">Welcome Back!</h2>
+    <div className="h-screen flex items-center justify-center bg-gradient-to-br from-gray-100 to-gray-300">
+      <div className="bg-white shadow-xl rounded-2xl border border-gray-200 p-8 max-w-md w-full">
+        <h2 className="text-4xl font-bold text-[#1E293B] text-center mb-4">Welcome Back!</h2>
 
         <form onSubmit={handleLogin} className="space-y-5">
           <div>
@@ -43,7 +43,7 @@ export default function Login() {
               type="email"
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="mt-2 w-full rounded-md border border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 px-3 py-2 transition-all"
+              className="mt-2 w-full rounded-md border border-gray-300 shadow-sm px-3 py-2 focus:ring-[#2563EB] focus:border-[#2563EB] transition-all"
             />
           </div>
 
@@ -52,7 +52,7 @@ export default function Login() {
               <label htmlFor="password" className="block text-sm font-medium text-gray-700">
                 Password
               </label>
-              <Link to="/forgetpassword" className="text-sm text-indigo-600 hover:text-indigo-500 transition">
+              <Link to="/forgetpassword" className="text-sm text-[#2563EB] hover:text-[#1E40AF] transition">
                 Forgot password?
               </Link>
             </div>
@@ -61,13 +61,13 @@ export default function Login() {
               type="password"
               onChange={(e) => setPassword(e.target.value)}
               required
-              className="mt-2 w-full rounded-md border border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 px-3 py-2 transition-all"
+              className="mt-2 w-full rounded-md border border-gray-300 shadow-sm px-3 py-2 focus:ring-[#2563EB] focus:border-[#2563EB] transition-all"
             />
           </div>
 
           <button
             type="submit"
-            className="w-full bg-indigo-600 text-white py-3 rounded-lg font-semibold shadow-md hover:bg-indigo-500 hover:scale-[1.02] transition-all duration-300"
+            className="w-full bg-[#2563EB] text-white py-3 rounded-lg font-semibold shadow-md hover:bg-[#2563EB] hover:scale-101 transition-all duration-300"
           >
             Login
           </button>
@@ -75,7 +75,7 @@ export default function Login() {
 
         <p className="mt-6 text-center text-sm text-gray-600">
           Don’t have an account?{" "}
-          <Link to="/signup" className="font-semibold text-indigo-600 hover:text-indigo-500 transition">
+          <Link to="/signup" className="font-semibold text-[#2563EB] hover:text-[#1E40AF] transition">
             Sign up
           </Link>
         </p>

@@ -3,6 +3,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import Header from "./Header";
+import { Trash2 } from "lucide-react";
 
 function User() {
   const [flag, setFlag] = useState(false);
@@ -44,7 +45,6 @@ function User() {
       console.log("ADD Todo Error: " + error);
     }
 
-    // console.log(selectedOption);
     if (selectedOption) {
       try {
         const res = await axios.get(`/API/user/todo/sort/${selectedOption}`, {
@@ -69,7 +69,6 @@ function User() {
         {},
         { headers: { token } }
       );
-      // setFlag((prev) => !prev);
     } catch (error) {
       console.log("Delete Todo Error: " + error);
     }
@@ -94,7 +93,6 @@ function User() {
         token,
       },
     });
-    // console.log(res.data);
     setTasks(res.data);
   };
 
@@ -209,13 +207,54 @@ function User() {
       : "text-red-500";
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    navigate("/");
+  };
+
+  const handleDeleteAcc = async () => {
+    const token = localStorage.getItem("token");
+    const res = await axios.delete("/API/delete", {
+      headers: {
+        token,
+      },
+    });
+
+    console.log(res.status);
+
+    if (res.status === 200) {
+      localStorage.removeItem("token");
+    }
+
+    navigate("/");
+  };
+
   return (
     <>
-      <Header />
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-100 to-gray-300 p-6">
-        <div className="bg-white p-8 rounded-3xl shadow-xl w-full max-w-lg">
-          <h1 className="text-4xl font-bold text-center mb-6 text-gray-900">
-            Todo App
+      <header className="fixed top-0 bg-[#1E293B] left-0 w-full bg-gray-800 text-white py-3 px-5 flex justify-between items-center shadow-lg z-50">
+        <h1 className="text-3xl font-bold">Todo App</h1>
+        <div className="flex space-x-4">
+          <button
+            className="bg-red-500 hover:bg-red-600 focus:bg-red-700 text-white px-4 py-2 rounded-md transition duration-200"
+            aria-label="Delete Account"
+            onClick={handleDeleteAcc}
+          >
+            Delete Account
+          </button>
+          <button
+            className="flex items-center gap-2 px-6 py-2 text-lg font-semibold rounded-full shadow-md transition duration-300 
+            bg-white text-indigo-700 hover:bg-gray-200 hover:scale-105 transform"
+            aria-label="Logout"
+            onClick={handleLogout}
+          >
+            Logout
+          </button>
+        </div>
+      </header>
+      <div className="min-h-screen pt-[80px] mt-8 overflow-hidden flex flex-col items-center justify-center bg-gradient-to-br from-gray-100 to-gray-300 p-6">
+        <div className="bg-white/80 backdrop-blur-lg p-8 rounded-3xl shadow-2xl w-full max-w-lg border border-gray-200">
+          <h1 className="text-4xl font-extrabold text-center mb-6 text-gray-900">
+            Manage Todos
           </h1>
 
           {/* Task Input */}
@@ -226,11 +265,11 @@ function User() {
               value={task}
               onChange={(e) => setTask(e.target.value)}
               onKeyDown={handleKeyDown}
-              className="flex-1 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 transition"
+              className="flex-1 p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 transition shadow-sm"
             />
             <button
               onClick={addTask}
-              className="bg-blue-600 text-white px-5 py-3 rounded-xl hover:bg-blue-700 transition font-medium"
+              className="bg-blue-600 text-white px-6 py-3 rounded-xl hover:bg-blue-700 transition font-semibold shadow-md"
             >
               Add
             </button>
@@ -250,7 +289,7 @@ function User() {
               max="3"
               value={level}
               onChange={(e) => setLevel(Number(e.target.value))}
-              className="w-full cursor-pointer"
+              className="w-full cursor-pointer accent-blue-600"
             />
           </div>
 
@@ -263,44 +302,14 @@ function User() {
               type="date"
               value={date}
               onChange={handleDateChange}
-              className="border rounded-lg p-3 w-full focus:ring-2 focus:ring-blue-500 transition"
+              className="border rounded-xl p-3 w-full focus:ring-2 focus:ring-blue-500 transition shadow-sm"
             />
             {date && (
-              <p className="mt-2 text-gray-700">Selected Date: {date}</p>
+              <p className="mt-2 text-gray-700 font-medium">
+                Selected Date: {date}
+              </p>
             )}
           </div>
-
-          {/* Task List */}
-          <ul className="space-y-4">
-            {todos.map((todo, idx) => (
-              <li
-                key={idx}
-                className="flex justify-between items-center p-2 rounded-xl bg-gray-200 shadow-md transition hover:bg-gray-300"
-              >
-                <span
-                  className={`font-medium text-gray-800 ${getLevelColor(
-                    todo.level
-                  )}`}
-                >
-                  {todo.name}
-                </span>
-                <div className="flex gap-2">
-                  <button
-                    onClick={() => handleComplete(todo._id)}
-                    className="bg-green-600 text-white px-3 py-2 rounded-lg hover:bg-green-700 transition font-medium"
-                  >
-                    Complete
-                  </button>
-                  <button
-                    onClick={() => handleDelete(todo._id)}
-                    className="bg-red-600 text-white px-3 py-2 rounded-lg hover:bg-red-700 transition font-medium"
-                  >
-                    Delete
-                  </button>
-                </div>
-              </li>
-            ))}
-          </ul>
 
           {/* Sort Options */}
           <div className="flex gap-6 mt-6">
@@ -312,11 +321,9 @@ function User() {
                 className="w-5 h-5 accent-blue-600"
               />
               <span
-                className={
-                  selectedOption === "asc"
-                    ? "text-blue-600 font-medium"
-                    : "text-gray-600"
-                }
+                className={`text-gray-700 font-medium ${
+                  selectedOption === "asc" ? "text-blue-600" : ""
+                }`}
               >
                 Sort Asc
               </span>
@@ -330,11 +337,9 @@ function User() {
                 className="w-5 h-5 accent-blue-600"
               />
               <span
-                className={
-                  selectedOption === "desc"
-                    ? "text-blue-600 font-medium"
-                    : "text-gray-600"
-                }
+                className={`text-gray-700 font-medium ${
+                  selectedOption === "desc" ? "text-blue-600" : ""
+                }`}
               >
                 Sort Desc
               </span>
@@ -345,11 +350,43 @@ function User() {
           <div className="mt-6">
             <button
               onClick={handleCompletedTodo}
-              className="w-full bg-gray-700 text-white px-4 py-3 rounded-xl hover:bg-gray-800 transition font-medium"
+              className="w-full bg-gray-800 text-white px-4 py-3 rounded-xl hover:bg-gray-900 transition font-semibold shadow-md"
             >
               Completed Todo
             </button>
           </div>
+
+          {/* Task List */}
+          <ul className="space-y-4 m-4">
+            {todos.map((todo, idx) => (
+              <li
+                key={idx}
+                className="flex justify-between items-center p-3 rounded-xl bg-gray-200 shadow-lg transition hover:bg-gray-300 border border-gray-300"
+              >
+                {/* Checkbox */}
+                <input
+                  type="checkbox"
+                  checked={todo.isComplete}
+                  onChange={() => handleComplete(todo._id)}
+                  className="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500 cursor-pointer"
+                />
+                <span
+                  className={`font-medium text-gray-800 ${getLevelColor(
+                    todo.level
+                  )}`}
+                >
+                  {todo.name}
+                </span>
+                <button
+                  onClick={() => handleDelete(todo._id)}
+                  className="bg-red-600 text-white p-2 rounded-full hover:bg-red-700 active:bg-red-800 transition duration-200 shadow-md hover:shadow-lg"
+                  aria-label="Delete Task"
+                >
+                  <Trash2 size={20} />
+                </button>
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
     </>

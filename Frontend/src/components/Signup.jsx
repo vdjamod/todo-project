@@ -53,9 +53,9 @@ export default function Signup() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-100 to-purple-200 px-4">
-      <div className="max-w-md w-full bg-white bg-opacity-80 shadow-2xl rounded-2xl p-8 backdrop-blur-md">
-        <h2 className="text-3xl font-bold text-center text-gray-900 mb-6">Create an Account</h2>
+    <div className="h-screen flex items-center justify-center bg-gradient-to-br from-gray-100 to-gray-300">
+      <div className="bg-white shadow-xl rounded-2xl border border-gray-200 p-8 max-w-md w-full">
+        <h2 className="text-4xl font-bold text-[#1E293B] text-center mb-4">Join with us!</h2>
 
         <form onSubmit={handleSignup} className="space-y-5">
           <div>
@@ -67,7 +67,7 @@ export default function Signup() {
               type="text"
               onChange={(e) => setName(e.target.value)}
               required
-              className="mt-2 w-full rounded-md border border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 px-3 py-2 transition-all"
+              className="mt-2 w-full rounded-md border border-gray-300 shadow-sm px-3 py-2 focus:ring-[#2563EB] focus:border-[#2563EB] transition-all"
             />
           </div>
 
@@ -80,32 +80,27 @@ export default function Signup() {
               type="email"
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="mt-2 w-full rounded-md border border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 px-3 py-2 transition-all"
+              className="mt-2 w-full rounded-md border border-gray-300 shadow-sm px-3 py-2 focus:ring-[#2563EB] focus:border-[#2563EB] transition-all"
             />
           </div>
 
           <div>
-            <div className="flex justify-between">
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-                Password
-              </label>
-              <Link to="/forgetpassword" className="text-sm text-indigo-600 hover:text-indigo-500 transition">
-                Forgot password?
-              </Link>
-            </div>
+            <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+              Password
+            </label>
             <input
               id="password"
               type="password"
               onChange={(e) => setPassword(e.target.value)}
               required
-              className="mt-2 w-full rounded-md border border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 px-3 py-2 transition-all"
+              className="mt-2 w-full rounded-md border border-gray-300 shadow-sm px-3 py-2 focus:ring-[#2563EB] focus:border-[#2563EB] transition-all"
             />
             {passwordError && <p className="text-red-500 text-sm mt-1">{passwordError}</p>}
           </div>
 
           <button
             type="submit"
-            className="w-full bg-indigo-600 text-white py-3 rounded-lg font-semibold shadow-md hover:bg-indigo-500 hover:scale-[1.02] transition-all duration-300"
+            className="w-full bg-[#2ECC71] text-white py-3 rounded-lg font-semibold shadow-md hover:bg-[#27AE60] hover:scale-101 transition-all duration-300"
           >
             Sign Up
           </button>
@@ -113,7 +108,7 @@ export default function Signup() {
 
         <p className="mt-6 text-center text-sm text-gray-600">
           Already have an account?{" "}
-          <Link to="/login" className="font-semibold text-indigo-600 hover:text-indigo-500 transition">
+          <Link to="/login" className="font-semibold text-[#2563EB] hover:text-[#1E40AF] transition">
             Login
           </Link>
         </p>
