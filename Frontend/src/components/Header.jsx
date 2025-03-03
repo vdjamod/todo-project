@@ -6,13 +6,14 @@ import GeneralModal from "./GeneralModal.jsx";
 function Header() {
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isDeleteAccount, setIsDeleteAccount] = useState(false);
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
-    navigate("/");
+    setIsModalOpen(true);
   };
 
   const handleDeleteAcc = async () => {
+    setIsDeleteAccount(true);
     setIsModalOpen(true);
   };
 
@@ -58,8 +59,16 @@ function Header() {
         {isModalOpen && (
           <GeneralModal
             isOpen={isModalOpen}
-            title="Confirm Account Deletion"
-            message="Are you sure you want to delete your account? This action cannot be undone."
+            title={
+              isDeleteAccount
+                ? "Confirm Account Deletion"
+                : "Confirm Delete Account"
+            }
+            message={
+              isDeleteAccount
+                ? "Are you sure you want to delete your account? This action cannot be undone."
+                : "Are you sure you want to Logout"
+            }
             onConfirm={confirmDelete}
             onCancel={() => setIsModalOpen(false)}
           />
