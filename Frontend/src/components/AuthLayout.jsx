@@ -16,11 +16,11 @@ export default function AuthLayout({ children }) {
     if (token || authStatus) {
       // console.log("Already logged in...");
     } else {
-      navigate("/user/signin");
+      navigate("/user/login");
     }
 
     if(!token && !authStatus) {
-      navigate('/signin')
+      navigate('/login')
     }
   }, []);
 

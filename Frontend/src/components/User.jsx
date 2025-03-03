@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import Header from "./Header";
 import { Trash2 } from "lucide-react";
 
@@ -207,51 +207,10 @@ function User() {
       : "text-red-500";
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    navigate("/");
-  };
-
-  const handleDeleteAcc = async () => {
-    const token = localStorage.getItem("token");
-    const res = await axios.delete("/API/delete", {
-      headers: {
-        token,
-      },
-    });
-
-    console.log(res.status);
-
-    if (res.status === 200) {
-      localStorage.removeItem("token");
-    }
-
-    navigate("/");
-  };
-
   return (
     <>
-      <header className="fixed top-0 bg-[#1E293B] left-0 w-full bg-gray-800 text-white py-3 px-5 flex justify-between items-center shadow-lg z-50">
-        <h1 className="text-3xl font-bold">Todo App</h1>
-        <div className="flex space-x-4">
-          <button
-            className="bg-red-500 hover:bg-red-600 focus:bg-red-700 text-white px-4 py-2 rounded-md transition duration-200"
-            aria-label="Delete Account"
-            onClick={handleDeleteAcc}
-          >
-            Delete Account
-          </button>
-          <button
-            className="flex items-center gap-2 px-6 py-2 text-lg font-semibold rounded-full shadow-md transition duration-300 
-            bg-white text-indigo-700 hover:bg-gray-200 hover:scale-105 transform"
-            aria-label="Logout"
-            onClick={handleLogout}
-          >
-            Logout
-          </button>
-        </div>
-      </header>
-      <div className="min-h-screen pt-[80px] mt-8 overflow-hidden flex flex-col items-center justify-center bg-gradient-to-br from-gray-100 to-gray-300 p-6">
+      <Header />
+      <div className="min-h-screen pt-24 overflow-hidden flex flex-col items-center justify-center bg-gradient-to-br from-gray-100 to-gray-300 p-6">
         <div className="bg-white/80 backdrop-blur-lg p-8 rounded-3xl shadow-2xl w-full max-w-lg border border-gray-200">
           <h1 className="text-4xl font-extrabold text-center mb-6 text-gray-900">
             Manage Todos
@@ -361,25 +320,31 @@ function User() {
             {todos.map((todo, idx) => (
               <li
                 key={idx}
-                className="flex justify-between items-center p-3 rounded-xl bg-gray-200 shadow-lg transition hover:bg-gray-300 border border-gray-300"
+                className="flex items-center justify-between gap-4 p-4 bg-gray-200 shadow-md border border-gray-300 rounded-xl transition duration-200 hover:bg-gray-100"
               >
                 {/* Checkbox */}
                 <input
                   type="checkbox"
                   checked={todo.isComplete}
                   onChange={() => handleComplete(todo._id)}
-                  className="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500 cursor-pointer"
+                  className="w-5 h-5 text-blue-600 border-gray-300 rounded-md cursor-pointer "
                 />
+
+                {/* Task Name */}
                 <span
-                  className={`font-medium text-gray-800 ${getLevelColor(
-                    todo.level
-                  )}`}
+                  className={`flex-1 font-medium text-gray-800 break-words ${
+                    todo.isComplete
+                      ? "line-through text-gray-500"
+                      : getLevelColor(todo.level)
+                  }`}
                 >
                   {todo.name}
                 </span>
+
+                {/* Delete Button */}
                 <button
                   onClick={() => handleDelete(todo._id)}
-                  className="bg-red-600 text-white p-2 rounded-full hover:bg-red-700 active:bg-red-800 transition duration-200 shadow-md hover:shadow-lg"
+                  className="p-2 bg-red-600 text-white rounded-full hover:bg-red-700 active:bg-red-800 transition duration-200 shadow-md hover:shadow-lg"
                   aria-label="Delete Task"
                 >
                   <Trash2 size={20} />

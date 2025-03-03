@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import GeneralModal from "./GeneralModal.jsx";
 
 function Header() {
+  console.log("Header component mounted"); // This should log when the page loads
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -12,9 +13,7 @@ function Header() {
     navigate("/");
   };
 
-  const handleDelete = async () => {
-    alert("Delete button clicked!"); // Should show an alert
-    console.log("Opening modal..."); // Should log to the console
+  const handleDeleteAcc = async () => {
     setIsModalOpen(true);
   };
 
@@ -35,16 +34,15 @@ function Header() {
       console.error("Error deleting account:", error);
     }
   };
-
   return (
     <>
-      <header className="sticky-top-0 top-0 left-0 w-full bg-[#1E293B] text-white py-4 px-6 flex justify-between items-center shadow-md">
+      <header className="fixed top-0 left-0 w-full bg-[#1E293B] text-white py-4 px-6 flex justify-between items-center shadow-md z-50">
         <h1 className="text-3xl font-bold">TODO Task</h1>
         <div className="flex space-x-4">
           <button
             className="bg-red-500 hover:bg-red-600 focus:bg-red-700 text-white px-4 py-2 rounded-md transition duration-200"
             aria-label="Delete Account"
-            onClick={handleDelete}
+            onClick={handleDeleteAcc}
           >
             Delete Account
           </button>
